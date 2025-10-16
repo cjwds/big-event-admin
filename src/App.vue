@@ -11,6 +11,11 @@ const userStore = useUserStore()
 </script>
 
 <template>
+  <hr />
+  <router-view></router-view>
+  <hr />
+  <hr />
+  <hr />
   <div>我是APP</div>
   <el-button @click="$router.push('/home')">首页</el-button>
   <el-button @click="goList">列表</el-button>
