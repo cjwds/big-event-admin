@@ -1,30 +1,11 @@
 <script setup>
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter()
-const route = useRoute()
-const goList = () => {
-  router.push('/list')
-  console.log(router, route)
-}
-import { useUserStore } from './stores'
-const userStore = useUserStore()
+import zhCn from 'element-plus/es/locale/lang/zh-cn.mjs'
 </script>
 
 <template>
-  <hr />
-  <router-view></router-view>
-  <hr />
-  <hr />
-  <hr />
-  <div>我是APP</div>
-  <el-button @click="$router.push('/home')">首页</el-button>
-  <el-button @click="goList">列表</el-button>
-  <el-button type="primary">Primary</el-button>
-  <el-button type="success">Success</el-button>
-
-  <p>{{ userStore.token }}</p>
-  <el-button @click="userStore.setToken('ywy yysn')">登录</el-button>
-  <el-button @click="userStore.removeToken">退出</el-button>
+  <el-config-provider :locale="zhCn">
+    <router-view></router-view>
+  </el-config-provider>
 </template>
 
 <style scoped></style>

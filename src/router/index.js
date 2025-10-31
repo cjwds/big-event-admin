@@ -1,3 +1,4 @@
+import { useUserStore } from '@/stores'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -7,7 +8,7 @@ const router = createRouter({
     { path: '/login', component: () => import('@/views/login/LoginPage.vue') },
     {
       path: '/',
-      component: () => import('@/views/layout/LayoutBox.vue'),
+      component: () => import('@/views/layout/LayoutContainer.vue'),
       redirect: '/article/manage',
       children: [
         {
@@ -23,16 +24,27 @@ const router = createRouter({
           component: () => import('@/views/user/UserProfile.vue')
         },
         {
-          path: '/user/avtar',
+          path: '/user/avatar',
           component: () => import('@/views/user/UserAvatar.vue')
         },
         {
-          path: '/user/pwd',
-          component: () => import('@/views/user/UserPwd.vue')
+          path: '/user/password',
+          component: () => import('@/views/user/UserPassword.vue')
         }
       ]
     }
   ]
 })
 
+// 登录访问拦截 => 默认是直接放行的
+// 根据返回值决定，是放行还是拦截
+// 返回值：
+// 1. undefined / true  直接放行
+// 2. false 拦回from的地址页面
+// 3. 具体路径 或 路径对象  拦截到对应的地址
+//    '/login'  { name: 'login' }
+router.beforeEach((to) => {
+  const userStore = useUserStore()
+  if (!userStore.token && to.path !== '/login') return '/login'
+})
 export default router
