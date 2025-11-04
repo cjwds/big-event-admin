@@ -68,6 +68,7 @@ const router = useRouter()
 const login = async () => {
   await form.value.validate()
   const res = await userLogin(formModel.value)
+  console.log(res)
   ElMessage.success('登陆成功')
   userStore.setToken(res.data.token)
   router.push('/')
