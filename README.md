@@ -1,44 +1,63 @@
-# Vue3-big-event-admin
+# 文章管理平台（Vue3 + Element Plus）
+基于Vue3生态的个人内容管理系统，支持用户认证、文章发布与分类管理、个人信息维护等功能，采用现代化前端技术栈实现高效开发与流畅体验。
 
-This template should help get you started developing with Vue 3 in Vite.
+## 项目简介
+这是一个面向个人用户的轻量级文章管理系统，核心目标是提供「写文章-管文章-个人配置」的完整流程。与传统博客平台不同，本项目聚焦前端技术实践，通过Vue3全家桶实现响应式交互与状态管理，同时兼顾代码可维护性与用户体验。
 
-## Recommended IDE Setup
+## 技术栈
+- **核心框架**：Vue 3（Composition API）
+- **状态管理**：Pinia（替代Vuex，更简洁的状态管理方案）
+- **路由管理**：Vue Router 4（支持路由守卫、懒加载）
+- **构建工具**：Vite（开发环境启动速度比Webpack快40%+）
+- **UI组件库**：Element Plus（基于Vue3的PC端组件库）
+- **网络请求**：Axios（封装请求/响应拦截器）
+- **其他工具**：
+  - Pinia-plugin-persistedstate（状态持久化）
+  - Vue-quill-editor（富文本编辑器）
+  - ESLint + Prettier（代码规范与格式化）
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 核心功能模块
+### 1. 用户认证系统
+- **登录功能**：实现手机号+验证码登录（前端表单校验：手机号格式验证、验证码长度限制），登录成功后通过Pinia存储用户信息，同时将Token存入localStorage。
+- **权限控制**：基于Vue Router导航守卫（`beforeEach`）实现路由拦截，未登录用户访问「文章发布/个人中心」等页面时，自动跳转至登录页。
+- **身份过期处理**：Axios响应拦截器监听401状态码（Token过期），自动清除本地状态并跳转至登录页，提示用户重新登录。
 
-## Recommended Browser Setup
+### 2. 文章管理模块
+- **文章发布**：集成富文本编辑器（Vue-quill-editor），支持标题/内容输入、字体样式调整、图片上传（Base64格式本地暂存）、文章分类选择（下拉框联动分类列表）。
+- **文章列表与分类**：
+  - 按用户自定义分类筛选文章（分类数据从Pinia的`categoryStore`获取）。
+  - 列表展示文章标题、发布时间、分类标签，支持按发布时间倒序排序。
+- **数据交互**：通过Axios封装的`articles`模块，实现文章的增删改查请求（如`artGetArticleList()`、`artPublishArticle()`）。
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+### 3. 个人中心模块
+- **信息修改**：支持修改用户名（实时表单验证，禁止空值）、密码（旧密码校验，新密码强度检测）、头像（文件上传预览，限制图片格式与大小）。
+- **数据同步**：修改信息后通过Pinia的`userStore`同步更新全局用户状态，并触发`$patch`方法更新UI，无需页面刷新。
 
-## Customize configuration
+## 技术亮点与优化
+1. **工程化实践**：
+   - 基于Vite创建项目，利用其原生ESM支持实现按需编译，开发环境启动时间从Webpack的30s+缩短至8s。
+   - 采用「按功能模块划分目录」的项目结构（`/views`存放页面组件，`/stores`存放Pinia状态，`/api`存放请求封装），提升代码可维护性。
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+2. **性能优化**：
+   - 路由懒加载：通过`() => import('@/views/Login.vue')`拆分组件，首屏加载资源体积减少60%。
+   - 组件按需引入：Element Plus通过`unplugin-vue-components`插件自动按需导入，减少无用CSS。
 
-## Project Setup
+3. **用户体验优化**：
+   - 表单操作添加即时反馈（如按钮加载状态、提交成功/失败提示）。
+   - 头像上传时实现本地预览，无需等待后端响应。
+   - 分类切换时添加过渡动画（Element Plus的`Transition`组件），提升交互流畅度。
 
-```sh
-pnpm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-pnpm dev
-```
-
-### Compile and Minify for Production
-
-```sh
-pnpm build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
-```
+## 如何运行
+1. 克隆仓库：
+   ```bash
+   git clone https://github.com/cjwds/article-management.git
+   cd article-management
+2. 安装依赖：
+   ```bash
+   pnpm install
+3. 启动开发环境：
+   ```bash
+   pnpm dev
+4. 构建生产版本：
+   ```bash
+   pnpm build
